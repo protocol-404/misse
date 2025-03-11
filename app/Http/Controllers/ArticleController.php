@@ -13,8 +13,8 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $article = Article::all();
-        return view('dashboard', compact($article));
+        $articles = Article::all();
+        return view('dashboard', compact('articles'));
     }
 
     /**
@@ -30,15 +30,15 @@ class ArticleController extends Controller
      */
     public function store(StoreArticleRequest $request)
     {
-        $credentials = Article::create([
+        $article = Article::create([
             'title' => $request->title,
             'description' => $request->description,
             'tag_id' => $request->tag_id,
             'user_id' => $request->user_id,
         ]);
 
-        if($credentials) {
-            return redirect('articles.index');
+        if($article) {
+            return redirect()->route('articles.index');
         } else {
             return view('articles.create');
         }
@@ -49,7 +49,7 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
-        return view('articles.show', compact($article));
+        return view('articles.show', compact('article'));
     }
 
     /**
@@ -57,7 +57,7 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
-        return view('articles.update');
+        return view('articles.edit', compact('article'));
     }
 
     /**
@@ -65,24 +65,23 @@ class ArticleController extends Controller
      */
     public function update(UpdateArticleRequest $request, Article $article)
     {
-        $article->name = $request->name;
-        $article->price = $request->price;
+        $article->title = $request->title;
         $article->description = $request->description;
+        $article->tag_id = $request->tag_id;
 
         if($article->save()) {
-            return redirect('articles.index');
+            return redirect()->route('articles.index');
         } else {
-            return view('articles.update', compact('article'));
+            return view('articles.edit', compact('article'));
         }
     }
-
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Article $article)
     {
-        Article::deleted($article);
-        return ('dashboard');
+        $article->delete();
+        return redirect()->route('dashboard');
     }
 }

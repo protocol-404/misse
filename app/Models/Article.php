@@ -17,12 +17,11 @@ class Article extends Model
         'user_id'
     ];
 
-
-    public function article() {
-        $this->belongsTo('tags');
+    public function tag() {
+        return $this->belongsTo(Tag::class);
     }
 
-    public function artUser() {
-        $this->hasOne('users');
+    public function user() {
+        return $this->belongsTo(User::class);
     }
 }
